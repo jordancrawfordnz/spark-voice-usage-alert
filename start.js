@@ -1,14 +1,11 @@
-var authentication = require('./authentication.js');
-var datausage = require('./datausage.js');
+var Authentication = require('./Authentication.js');
+var UsageData = require('./UsageData.js');
+var promise = require('promise');
 
-// request = require('request');
-// request.defaults({jar: true})
-// var cookieJar = request.jar();
-
-var username = process.env.SPARK_USERNAME;
+var mobileNumber = process.env.SPARK_MOBILE_NUMBER;
 var password = process.env.SPARK_PASSWORD;
 
-var requiredArgs = [username, password];
+var requiredArgs = [mobileNumber, password];
 
 for (var i = 0; i < requiredArgs.length; i++) {
   if (!requiredArgs[i]) {
@@ -17,16 +14,17 @@ for (var i = 0; i < requiredArgs.length; i++) {
   }
 }
 
-console.log("Logging in to Spark with the username " + username + ".");
+console.log("Logging in to Spark for the number " + mobileNumber + ".");
 
-var authenticationRequest = authentication.authenticate(username, password).then(function(cookies) {
-  console.log('cookies');
-  console.log(cookies)
-
-  datausage.getDataUsage(cookies);
+var getUsageDataPromise = Authentication.authenticate(mobileNumber, password).then(function(cookies) {
+  return UsageData.getVoiceUsageData(cookies).then(function(voiceUsage) {
+    console.log('Total used: ' + voiceUsage.totalUsed);
+    console.log('Total cap: ' + voiceUsage.totalCap);
+    console.log('Used ' + voiceUsage.percentUsed + '%');
+  });
 });
 
-authenticationRequest.catch(function(error) {
-  console.log('Hit an error while authenticating with Spark. Throw an error!');
+getUsageDataPromise.catch(function(error) {
+  console.log('Hit an error while getting usage data from Spark.');
   console.log(error)
 });
