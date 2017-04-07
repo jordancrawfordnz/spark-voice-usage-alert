@@ -1,4 +1,9 @@
 var authentication = require('./authentication.js');
+var datausage = require('./datausage.js');
+
+// request = require('request');
+// request.defaults({jar: true})
+// var cookieJar = request.jar();
 
 var username = process.env.SPARK_USERNAME;
 var password = process.env.SPARK_PASSWORD;
@@ -14,9 +19,11 @@ for (var i = 0; i < requiredArgs.length; i++) {
 
 console.log("Logging in to Spark with the username " + username + ".");
 
-var authenticationRequest = authentication.authenticate(username, password).then(function(cookie) {
-  console.log('cookie');
-  console.log(cookie)
+var authenticationRequest = authentication.authenticate(username, password).then(function(cookies) {
+  console.log('cookies');
+  console.log(cookies)
+
+  datausage.getDataUsage(cookies);
 });
 
 authenticationRequest.catch(function(error) {
