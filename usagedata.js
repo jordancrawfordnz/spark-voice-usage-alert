@@ -1,13 +1,13 @@
 var DATA_USAGE_URL = 'https://www.spark.co.nz/rest/v1/myspark/secure/mobile/datausage';
 var VOICE_USAGE_TYPE = 'Voice';
 
-var promise = require('promise');
+var Promise = require('promise');
 var request = require('request');
 
 request.defaults({jar: true})
 var cookieJar = request.jar();
 
-var requestWithPromise = promise.denodeify(request);
+var requestWithPromise = Promise.denodeify(request);
 
 var UsageData = {};
 
@@ -16,7 +16,7 @@ UsageData.getVoiceUsageData = function(authCookies) {
     var usageMeters = usageData.usageMeters;
 
     if (!usageMeters) {
-      return promise.reject('No usage meter information.');
+      return Promise.reject('No usage meter information.');
     }
 
     var result = {
@@ -34,7 +34,7 @@ UsageData.getVoiceUsageData = function(authCookies) {
 
     result.percentUsed = Math.round(100 * result.totalUsed / Math.max(result.totalCap, 1));
 
-    return promise.resolve(result);
+    return Promise.resolve(result);
   });
 };
 

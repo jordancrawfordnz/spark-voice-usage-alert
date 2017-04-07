@@ -1,11 +1,12 @@
-var Authentication = require('./Authentication.js');
-var UsageData = require('./UsageData.js');
-var promise = require('promise');
+var Authentication = require('./authentication.js');
+var UsageData = require('./usagedata.js');
+var LastUsage = require('./lastusage.js');
 
 var mobileNumber = process.env.SPARK_MOBILE_NUMBER;
 var password = process.env.SPARK_PASSWORD;
+var redisHost = process.env.REDIS_HOST;
 
-var requiredArgs = [mobileNumber, password];
+var requiredArgs = [mobileNumber, password, redisHost];
 
 for (var i = 0; i < requiredArgs.length; i++) {
   if (!requiredArgs[i]) {

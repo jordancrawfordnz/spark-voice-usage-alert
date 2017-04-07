@@ -1,30 +1,30 @@
 var AUTHENTICATION_COOKIE_NAME = 'GAM-PBBXVR-CEBQ';
 var AUTHENTICATION_URL = 'https://www.spark.co.nz/rest/v1/authenticate';
 
-var promise = require('promise');
+var Promise = require('promise');
 var request = require('request');
-var requestWithPromise = promise.denodeify(request);
+var requestWithPromise = Promise.denodeify(request);
 
 var Authentication = {};
 
-// Returns a promise with the authentication cookie.
+// Returns a Promise with the authentication cookie.
 Authentication.authenticate = function(username, password) {
   return Authentication._makeAuthenticationRequest(username, password).then(function(response) {
     if (response.statusCode != 200) {
-      return promise.reject('Non 200 status code.');
+      return Promise.reject('Non 200 status code.');
     }
 
     var authenticationCookies = Authentication._getAuthenticationCookies(response.headers);
 
     if (authenticationCookies) {
-      return promise.resolve(authenticationCookies);
+      return Promise.resolve(authenticationCookies);
     } else {
-      return promise.reject('No authentication cookies set.');
+      return Promise.reject('No authentication cookies set.');
     }
   })
 };
 
-// Returns a promise with the authentication result.
+// Returns a Promise with the authentication result.
 Authentication._makeAuthenticationRequest = function(username, password) {
   return requestWithPromise({
     method: 'POST',
