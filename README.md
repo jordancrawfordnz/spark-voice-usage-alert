@@ -51,7 +51,12 @@ This is a URL to hit after the job completes successfully. Use this with somethi
 4. Configure `node start.js` to run on a schedule with a CRON job.
 
 ## Setting it up with Docker
-<!-- TODO -->
+
+### Running
+Using [Docker Compose](https://docs.docker.com/compose/) is recommended. See `docker-compose.yml` for an example which includes [Redis](https://hub.docker.com/_/redis/) and [cron-container-starter](https://hub.docker.com/r/jordancrawford/cron-container-starter/).
+
+### Building
+Use `docker build -t jordancrawford/spark-voice-usage-alert .`
 
 ## Note
 This is not endorsed by Spark at all and these API end points are unofficial.

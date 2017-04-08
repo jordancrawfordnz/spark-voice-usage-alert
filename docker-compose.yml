@@ -1,0 +1,22 @@
+version: '2'
+services:
+  spark-voice-usage-alert:
+    container_name: spark-voice-usage-alert
+    env_file: example.env
+    image: jordancrawford/spark-voice-usage-alert
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    volumes:
+      - ~/redis-host-path:/data
+  cron-container-starter:
+   container_name: cron-container-starter
+   image: jordancrawford/cron-container-starter
+   restart: always
+   cpu_shares: 128
+   mem_limit: 64m
+   environment:
+    CONTAINER_spark-voice-usage-alert: '0 5 * * *'
+   volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
