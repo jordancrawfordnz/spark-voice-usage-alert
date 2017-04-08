@@ -7,8 +7,9 @@ var Promise = require('promise');
 var request = require('request');
 var requestWithPromise = Promise.denodeify(request);
 
-var mobileNumber = process.env.SPARK_MOBILE_NUMBER;
+var username = process.env.SPARK_USERNAME;
 var password = process.env.SPARK_PASSWORD;
+var mobileNumber = process.env.SPARK_MOBILE_NUMBER;
 var redisHost = process.env.REDIS_HOST;
 var plivoAuthID = process.env.PLIVO_AUTH_ID;
 var plivoAuthToken = process.env.PLIVO_AUTH_TOKEN;
@@ -23,7 +24,7 @@ var plivoOptions = {
   sourceNumber : plivoSourceNumber
 };
 
-var requiredArgs = [mobileNumber, password, redisHost, plivoAuthID, plivoAuthToken, plivoDestinationNumber, plivoSourceNumber];
+var requiredArgs = [username, password, mobileNumber, redisHost, plivoAuthID, plivoAuthToken, plivoDestinationNumber, plivoSourceNumber];
 
 for (var i = 0; i < requiredArgs.length; i++) {
   if (!requiredArgs[i]) {
@@ -36,7 +37,7 @@ var lastUsage = new LastUsage(redisHost);
 
 console.log("Logging in to Spark for the number " + mobileNumber + ".");
 
-var promise = Authentication.authenticate(mobileNumber, password).then(function(cookies) {
+var promise = Authentication.authenticate(username, password).then(function(cookies) {
   return UsageData.getVoiceUsageData(cookies).then(function(voiceUsage) {
     console.log('Total used: ' + voiceUsage.totalUsed);
     console.log('Total cap: ' + voiceUsage.totalCap);

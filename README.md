@@ -19,11 +19,14 @@ This:
 
 
 ## Environment Variables
-### `SPARK_MOBILE_NUMBER`
-This is the Spark mobile number to check. This number is mentioned in the alert text message and is used as the username for authentication with Spark.
+### `SPARK_USERNAME`
+This is the email address you use to login with MySpark.
 
 ### `SPARK_PASSWORD`
-This is your Spark password.
+This is your Spark password you use to login with MySpark.
+
+### `SPARK_MOBILE_NUMBER`
+This is the Spark mobile number to check. This number is mentioned in the alert text message.
 
 ### `REDIS_HOST`
 This is the hostname for your Redis server to store details about the last check (to prevent repeated alerts).
