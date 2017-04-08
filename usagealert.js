@@ -32,4 +32,8 @@ UsageAlert.shouldSendUsageAlert = function(mobileNumber, voiceUsage, lastUsage) 
   });
 };
 
+UsageAlert.getAlertMessage = function(mobileNumber, voiceUsage) {
+  return "Spark Voice Usage Alert - " + voiceUsage.percentUsed + "% (" + voiceUsage.totalUsed + " of " + voiceUsage.totalCap + " minutes) of voice allowance used for the number " + mobileNumber;
+};
+
 module.exports = UsageAlert;
