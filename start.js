@@ -1,6 +1,8 @@
 var Authentication = require('./authentication.js');
 var UsageData = require('./usagedata.js');
 var LastUsage = require('./lastusage.js');
+var UsageAlert = require('./usagealert.js');
+var Promise = require('promise');
 
 var mobileNumber = process.env.SPARK_MOBILE_NUMBER;
 var password = process.env.SPARK_PASSWORD;
@@ -15,6 +17,8 @@ for (var i = 0; i < requiredArgs.length; i++) {
   }
 }
 
+var lastUsage = new LastUsage(redisHost);
+
 console.log("Logging in to Spark for the number " + mobileNumber + ".");
 
 var getUsageDataPromise = Authentication.authenticate(mobileNumber, password).then(function(cookies) {
@@ -22,10 +26,26 @@ var getUsageDataPromise = Authentication.authenticate(mobileNumber, password).th
     console.log('Total used: ' + voiceUsage.totalUsed);
     console.log('Total cap: ' + voiceUsage.totalCap);
     console.log('Used ' + voiceUsage.percentUsed + '%');
+
+    return UsageAlert.shouldSendUsageAlert(mobileNumber, voiceUsage, lastUsage).then(function(usageAlert) {
+      if (usageAlert) {
+        console.log('Will send alert for ' + usageAlert + '%.');
+        // TODO: Send an alert.
+      }
+    }).then(function() {
+      // Update the percentage in the data store.
+      return lastUsage.setPercentageForMobile(mobileNumber, voiceUsage.percentUsed);
+    });
   });
 });
 
-getUsageDataPromise.catch(function(error) {
+getUsageDataPromise.then(function() {
+  // Close the connection to the data store.
+  lastUsage.quit();
+}, function(error) {
   console.log('Hit an error while getting usage data from Spark.');
   console.log(error)
+
+  // Close the connection to the data store.
+  lastUsage.quit();
 });
