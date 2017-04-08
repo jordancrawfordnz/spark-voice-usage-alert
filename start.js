@@ -3,6 +3,9 @@ var UsageData = require('./usagedata.js');
 var LastUsage = require('./lastusage.js');
 var UsageAlert = require('./usagealert.js');
 var TextAlert = require('./textalert.js');
+var Promise = require('promise');
+var request = require('request');
+var requestWithPromise = Promise.denodeify(request);
 
 var mobileNumber = process.env.SPARK_MOBILE_NUMBER;
 var password = process.env.SPARK_PASSWORD;
@@ -11,6 +14,7 @@ var plivoAuthID = process.env.PLIVO_AUTH_ID;
 var plivoAuthToken = process.env.PLIVO_AUTH_TOKEN;
 var plivoDestinationNumber = process.env.PLIVO_DESTINATION_NUMBER;
 var plivoSourceNumber = process.env.PLIVO_SOURCE_NUMBER;
+var jobCompleteUrl = process.env.JOB_COMPLETE_URL;
 
 var plivoOptions = {
   authID: plivoAuthID,
@@ -55,7 +59,14 @@ promise.then(function() {
   // Close the connection to the data store.
   lastUsage.quit();
 
-  // TODO: Hit a service like deadmansnitch so I know when this check isn't happening.
+  if (jobCompleteUrl) {
+    return requestWithPromise({
+      method: 'GET',
+      url: jobCompleteUrl
+    }).then(function() {
+      console.log('Hit the job complete URL.');
+    });
+  }
 }, function(error) {
   console.log('Hit an error while getting usage data from Spark.');
   console.log(error)
