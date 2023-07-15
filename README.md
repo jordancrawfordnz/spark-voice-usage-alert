@@ -1,5 +1,11 @@
 # Spark Voice Usage Alert
 
+---
+
+**Please note:** This project is not actively maintained, it may no longer work and may depend on out of date dependencies.
+
+---
+
 ## What is this?
 I found that on Spark NZ (cell phone provider), a post paid monthly plan wouldn't stop incuring additional charges when I run out of minutes and it wouldn't notify me if I did use too many minutes!
 
